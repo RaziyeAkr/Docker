@@ -59,6 +59,6 @@ ansible-playbook --syntax-check playbook.yml
 Execute the playbook with:
 
 ```bash
-ansible-playbook -i inventory.ini playbook.yml
+ ansible-playbook -i inventory/hosts.ini playbook.yml
 ```
 
