@@ -1,38 +1,64 @@
-Role Name
-=========
+# Docker Ansible Role
 
-A brief description of the role goes here.
+This Ansible role installs and configures Docker on Ubuntu hosts.
 
-Requirements
-------------
+## Create the Role
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Create the role directory using Ansible Galaxy:
 
-Role Variables
---------------
+```bash
+ansible-galaxy role init docker
+```
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+## Tasks
 
-Dependencies
-------------
+This role performs the following tasks:
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+* Updates the APT package cache.
+* Installs the required dependencies:
 
-Example Playbook
-----------------
+  * `ca-certificates`
+  * `curl`
+* Creates the `/etc/apt/keyrings` directory.
+* Downloads the official Docker GPG key.
+* Detects the system architecture using `dpkg --print-architecture`.
+* Configures the Docker APT repository using a Jinja2 template.
+* Updates the APT package cache when the repository configuration changes (via a handler).
+* Installs the following Docker packages:
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+  * `docker-ce`
+  * `docker-ce-cli`
+  * `containerd.io`
+  * `docker-buildx-plugin`
+  * `docker-compose-plugin`
+* Enables and starts the Docker service.
+* Adds the specified user to the `docker` group.
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+## Variable
 
-License
--------
+| Variable      | Description                             | Required |
+| ------------- | --------------------------------------- | :------: |
+| `docker_user` | User to be added to the `docker` group. |    Yes   |
 
-BSD
+Example:
 
-Author Information
-------------------
+```yaml
+docker_user: ubuntu
+```
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+## Check Playbook Syntax
+
+Before running the playbook, validate its syntax:
+
+```bash
+ansible-playbook --syntax-check playbook.yml
+```
+
+## Run the Playbook
+
+Execute the playbook with:
+
+```bash
+ansible-playbook -i inventory.ini playbook.yml
+```
+
