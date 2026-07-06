@@ -1,0 +1,8 @@
+---
+- name: Install Docker Python SDK
+  hosts: docker_hosts
+  become: true
+
+  tasks:
+    - name: Include Python SDK installation tasks
+      ansible.builtin.include_tasks: roles/docker/tasks/python.yml
